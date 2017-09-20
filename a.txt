@@ -1,0 +1,17 @@
+declare @CodigoId int = 2;
+
+declare @IdAsociado int = (select IdAsociado from TbCodigo where Id=@CodigoId)
+declare @IdSolicitudWeb int = (select Id from TbSolicitudEmpresarioWeb where Id=@IdAsociado)
+declare @EmpresarioId int=(select Id from TbEmpresario where TbSolicitudEmpresarioWeb_Id=@IdSolicitudWeb)
+declare @idEmpresa int= (select Id from TbEmpresa where TbEmpresario_Id=@EmpresarioId)
+declare @idContrato int = (select Id from TbEmpresa_Contrato where TbEmpresa_Id=@idEmpresa)
+declare @idPersonal int = (select Id from TbPersonal where TbEmpresa_Id=@idEmpresa)
+
+delete from TbEmpresa_Contrato_Mensualidad where TbEmpresa_Contrato_Id = @idContrato
+delete from TbEmpresa_Contrato where Id = @idContrato
+delete from TbUsuario where TbPersonal_Id=@idPersonal
+delete from TbPersonal where Id=@idPersonal
+delete from TbEmpresa_Opcion where TbEmpresa_Id=@idEmpresa
+delete from TbEmpresa where Id=@idEmpresa
+delete from  TbEmpresario where Id=@EmpresarioId
+update TbCodigo set TbEstado_Id = 1 where Id=@CodigoId
